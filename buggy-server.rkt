@@ -6,17 +6,20 @@
 (define (make-alarm-e)
   (alarm-evt (+ (current-inexact-milliseconds) 50)))
 
+(define chunk-size 16)
+
 (define ((connection-handler in out with-alarm?))
+  (define buffer (make-bytes chunk-size))
   (let loop ((alarm-e (make-alarm-e))
-	     (read-e (read-bytes-evt 16 in)))
+	     (read-e (read-bytes!-evt buffer in)))
     (sync (if with-alarm?
 	      (wrap-evt alarm-e (lambda (_) (loop (make-alarm-e) read-e)))
 	      never-evt)
 	  (wrap-evt read-e
-		    (lambda (bs)
-		      (when (bytes? bs)
+		    (lambda (count)
+		      (when (not (eof-object? count))
 			(sleep 0.01)
-			(write-bytes bs out)
+			(write-bytes buffer out)
 			(flush-output out))
 		      (loop alarm-e read-e)))
 	  (wrap-evt (eof-evt in)

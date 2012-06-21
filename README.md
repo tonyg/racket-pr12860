@@ -25,3 +25,9 @@ instance. Now, running `./run-test-osx.sh` should still produce no
 output, but in fact on most runs, some output (from diffing the input
 against the output of the socket) is produced, meaning that the echoed
 output differed from the input.
+
+## Analysis
+
+Initially I used `read-bytes-evt`, which is (more or less) implemented
+in terms of `read-bytes!-evt`. Switching to `read-bytes!-evt` didn't
+make the issue go away.
