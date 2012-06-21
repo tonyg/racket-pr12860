@@ -1,4 +1,9 @@
-# Bug in Racket's I/O?
+# Exploring PR 12860
+
+This repo contains code for exploring what's happening with [Racket PR
+12860](http://bugs.racket-lang.org/query/?cmd=view&pr=12860).
+
+## Bug description
 
 When `sync`ing on `read-bytes-evt` at the same time as on `alarm-evt`,
 it seems that if the `read-bytes-evt` would have come ready but the
